@@ -2,8 +2,6 @@
 
 Monitor the incoming and outgoing traffic metrics in realtime for `NGINX`.
 
-**Now accounting module supports both `HTTP` and `STREAM` subsystems**
-
 A realtime traffic and status code monitor solution for NGINX,
 which needs less memory and cpu than other realtime log analyzing solutions.
 Useful for traffic accounting based on NGINX config logic (by location / server / user-defined-variables).
@@ -31,23 +29,6 @@ For each time period (defined by `interval`), a timer event is triggered, those
 
 ---
 
-# Quickstart
-
-Download pre-build binaries from [Releases](https://github.com/Lax/traffic-accounting-nginx-module/releases),
-place them into `./modules` sub-directory of `nginx`.
-
-Add following lines at the beginning of `nginx.conf`:
-
-```
-load_module modules/ngx_http_accounting_module.so;
-```
-
-Reload nginx config with `nginx -s reload`. *Done!*
-
-*Alternatively, you can install this module manually with the Nginx source, see the [installation instructions](#Installation)*
-
----
-
 ## Dashboard
 
 **Dashboard - Visualize with Grafana**
@@ -62,7 +43,7 @@ Edit your nginx.conf.
 Example:
 
 ```nginx
-http{
+http {
     # turn on accounting function
     accounting  on;
     accounting_log  logs/http-accounting.log;
@@ -100,7 +81,7 @@ accounting
 
 **default:** *accounting off*
 
-**context:** *http, stream*
+**context:** *http*
 
 accounting_log
 --------------------
@@ -108,7 +89,7 @@ accounting_log
 
 **default:** *-*
 
-**context:** *http, stream*
+**context:** *http*
 
 Configures logging.
 
@@ -124,7 +105,7 @@ accounting_id
 
 **default:** *accounting_id default*
 
-**context:** *http, stream, server, location, if in location*
+**context:** *http, server, location, if in location*
 
 Sets the `accounting_id` string by user defined variable.
 
@@ -136,7 +117,7 @@ accounting_interval
 
 **default:** *accounting_interval 60*
 
-**context:** *http, stream*
+**context:** *http*
 
 Specifies the reporting interval.  Defaults to 60 seconds.
 
@@ -146,7 +127,7 @@ accounting_perturb
 
 **default:** *accounting_perturb off*
 
-**context:** *http, stream*
+**context:** *http*
 
 Randomly staggers the reporting interval by 20% from the usual time.
 
@@ -210,50 +191,9 @@ which contains a list of key-values.
 
 
 ---
-## Installation
-
-### Step 1
-
-There are several ways to integrate traffic accounting functions into NGINX.
-
-* Download pre-build binaries from [Releases](https://github.com/Lax/traffic-accounting-nginx-module/releases).
-
-* Build the binaries from sources
-
-```
-# grab nginx source code from nginx.org, then cd to /path/to/nginx-src/
-git clone https://github.com/Lax/traffic-accounting-nginx-module.git
-
-# to build as `static` module
-./configure --prefix=/opt/nginx --with-stream --add-module=traffic-accounting-nginx-module
-make && make install
 
 
-# to build as `dynamic` module
-# both HTTP and STREAM module, target module file name is ngx_http_accounting_module.so
-./configure --prefix=/opt/nginx --with-stream --add-dynamic-module=traffic-accounting-nginx-module
-
-# only HTTP module, target module file name is ngx_http_accounting_module.so
-#./configure --prefix=/opt/nginx --add-dynamic-module=traffic-accounting-nginx-module
-
-# only STREAM module, target module file name is ngx_stream_accounting_module.so
-#./configure --prefix=/opt/nginx --without-http --add-dynamic-module=traffic-accounting-nginx-module
-
-make modules
-```
-
-### Step 2 (dynamic module only)
-
-Add the following lines at the beginning of `nginx.conf`:
-
-```
-load_module modules/ngx_http_accounting_module.so;
-
-# for STREAM only build
-#load_module modules/ngx_stream_accounting_module.so;
-```
-
-### Step 3
+### Configuration example
 
 ```
 http {
